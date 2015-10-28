@@ -11,18 +11,17 @@ public class HeartbeatFlow
     	TaskProperties jenkinsPrperties = new JenkinsProperties();
     	TaskProperties gridPrperties = new GridProperties();
     	
-    	TaskFactory jenkinsFactory = new TaskFactory(jenkinsPrperties);
-    	TaskFactory gridFactory = new TaskFactory(gridPrperties);
+    	TaskService jenkinsService = new JenkinsTaskService(jenkinsPrperties);
+    	TaskService gridService = new GridTaskFactory(gridPrperties);
+    	
     	
     	ResultCollector resultCollector = new ResultCollector();
     	
-    	resultCollector.addResults(jenkinsFactory.getTasksResult());
-    	resultCollector.addResults(gridFactory.getTasksResult());
+    	resultCollector.addResults(jenkinsService.getTasksResult());
+    	resultCollector.addResults(gridService.getTasksResult());
     	
     	CSVReportCreator csvReportCreator = new CSVReportCreator();
     	csvReportCreator.createReport(resultCollector.getResults());
-    	
-    	
     	
     }
 }

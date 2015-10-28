@@ -9,4 +9,9 @@ public class ResultCollector {
 	public void addResult(TaskResult tasksResult) {
 		
 	}
+
+	public Object getResults() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
