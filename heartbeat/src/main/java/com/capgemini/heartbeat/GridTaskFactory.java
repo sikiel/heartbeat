@@ -1,9 +1,12 @@
 package com.capgemini.heartbeat;
 
-public class GridTaskFactory extends TaskFactory {
+public class GridTaskFactory implements TaskService {
 
-	public GridTaskFactory(GridProperties gridPrperties) {
-		// TODO Auto-generated constructor stub
+	public GridTaskFactory(TaskProperties gridPrperties) {
 	}
 
+	public ResultCollector getTasksResult() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

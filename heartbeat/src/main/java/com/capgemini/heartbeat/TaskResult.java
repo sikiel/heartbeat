@@ -1,6 +1,6 @@
 package com.capgemini.heartbeat;
 
-public abstract class TaskResult {
+public class TaskResult {
 	
 	private Long timestamp;
 	private String name;
