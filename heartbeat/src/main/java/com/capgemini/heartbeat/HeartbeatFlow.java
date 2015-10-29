@@ -19,7 +19,7 @@ public class HeartbeatFlow {
 		resultCollector.addResults(jenkinsService.getTasksResult());
 		resultCollector.addResults(gridService.getTasksResult());
 
-		CSVReportCreator csvReportCreator = new CSVReportCreator();
+		CSVReportCreator csvReportCreator = new CSVReportCreator(hp.getCsvReportPath());
 		csvReportCreator.createReport(resultCollector.getTasksResult());
 
 	}

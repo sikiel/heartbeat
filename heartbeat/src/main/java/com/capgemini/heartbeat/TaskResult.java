@@ -1,13 +1,15 @@
 package com.capgemini.heartbeat;
 
+import java.util.Date;
+
 public class TaskResult {
 	
-	private Long timestamp;
+	private Date timestamp;
 	private String name;
 	private String status;
 
 	public TaskResult(Long timestamp, String name, String status) {
-		this.timestamp = timestamp;
+		this.timestamp = new Date(timestamp);
 		this.name = name;
 		this.status = status;
 	}
@@ -16,7 +18,7 @@ public class TaskResult {
 		return name;
 	}
 
-	public Long getTimestamp() {
+	public Date getTimestamp() {
 		return timestamp;
 	}
 

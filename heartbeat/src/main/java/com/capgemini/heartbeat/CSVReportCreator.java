@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 public class CSVReportCreator {
 
-
 	private static final String separator = ";";
 	private static final String endOfLine = "\n";
 	private static final String fileHeader = "timestamp; Jenkins|Grid; Status";
