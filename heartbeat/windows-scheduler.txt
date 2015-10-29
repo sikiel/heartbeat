@@ -1,0 +1,1 @@
+schtasks /create /sc minute /mo 5 /tn "Jenkins, Selenium-Grid heartbeat" /tr "java -jar \\path\to\heartbeat.jar"
