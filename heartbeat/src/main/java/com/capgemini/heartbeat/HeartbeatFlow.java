@@ -12,7 +12,7 @@ public class HeartbeatFlow
     	TaskProperties gridPrperties = new GridProperties();
     	
     	TaskService jenkinsService = new JenkinsTaskService(jenkinsPrperties);
-    	TaskService gridService = new GridTaskFactory(gridPrperties);
+    	TaskService gridService = new GridTaskService(gridPrperties);
     	
     	
     	ResultCollector resultCollector = new ResultCollector();
