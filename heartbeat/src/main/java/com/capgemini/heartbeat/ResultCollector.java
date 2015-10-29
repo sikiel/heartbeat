@@ -24,9 +24,4 @@ public class ResultCollector {
 	public void addResult(TaskResult tasksResult) {
 		results.add(tasksResult);
 	}
-
-	public Object getResults() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

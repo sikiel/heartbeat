@@ -13,7 +13,7 @@ public class HeartbeatProperties {
 		this.csvReportPath = csvReportPath;
 	}
 
-	public String getJsonPropertiesPath() {
+	public String getJenkinsPropertiesPath() {
 		return jsonPropertiesPath;
 	}
 
