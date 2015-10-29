@@ -24,7 +24,7 @@ public class CSVReportCreator {
 	};
 
 	public void createReport(Object results) {
-		// @SuppressWarnings("unchecked")
+		@SuppressWarnings("unchecked")
 		ArrayList<TaskResult> listResults = (ArrayList<TaskResult>) results;
 
 		try {
@@ -36,12 +36,12 @@ public class CSVReportCreator {
 			writeToCsv.append(fileHeader);
 
 			for (int i = 0; i < listResults.size(); i++) {
-
-				// writeToCsv.append(separator);
-
-				// writeToCsv.append(separator);
-
-				// writeToCsv.append(endOfLine);
+				writeToCsv.append(listResults.get(i).getTimestamp().toString());
+				writeToCsv.append(separator);
+				writeToCsv.append(listResults.get(i).getName());
+				writeToCsv.append(separator);
+				writeToCsv.append(listResults.get(i).getStatus());
+				writeToCsv.append(endOfLine);
 			}
 		} catch (IOException e) {
 			System.out.println("File open error! ");
