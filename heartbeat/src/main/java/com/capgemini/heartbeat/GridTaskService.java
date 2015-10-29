@@ -39,7 +39,7 @@ public class GridTaskService implements TaskService {
 	}
 
 	private boolean checkGrid(String adress) throws IOException {
-		URL url = new URL("http://" + adress);
+		URL url = new URL(adress);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("GET");
 		if (conn.getResponseCode() == 200) {
