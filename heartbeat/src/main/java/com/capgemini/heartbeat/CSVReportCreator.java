@@ -24,7 +24,7 @@ public class CSVReportCreator {
 
 	public void createReport(Object results) {
 		// @SuppressWarnings("unchecked")
-		ArrayList listResults = (ArrayList) results;
+		ArrayList<TaskResult> listResults = (ArrayList<TaskResult>) results;
 
 		try {
 			file = new File(pathWithCsvFile);
