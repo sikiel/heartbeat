@@ -26,7 +26,7 @@ public class ResultCollector {
 	}
 
 	public Object getResults() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 }
