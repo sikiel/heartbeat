@@ -76,7 +76,7 @@ public class HeartbeatPropertiesManagerTest {
 	}
 
 	private void assertJenkinsPathIsCorrect() {
-		assertEquals(result.getJsonPropertiesPath(), PATH_TO_JENKINS);
+		assertEquals(result.getJenkinsPropertiesPath(), PATH_TO_JENKINS);
 	}
 
 	private void assertCsvReportPathIsNull() {
@@ -88,6 +88,6 @@ public class HeartbeatPropertiesManagerTest {
 	}
 
 	private void assertJenkisPathIsNull() {
-		assertEquals(result.getJsonPropertiesPath(), NULL_PATH);
+		assertEquals(result.getJenkinsPropertiesPath(), NULL_PATH);
 	}
 }
