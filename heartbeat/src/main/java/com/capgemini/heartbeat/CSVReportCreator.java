@@ -51,8 +51,9 @@ public class CSVReportCreator {
 			e.printStackTrace();
 		} finally {
 			try {
-				writeToCsv.flush();
+				
 				if (writeToCsv != null) {
+					writeToCsv.flush();
 					writeToCsv.close();
 					System.out.println("CSV file updated!");
 				}
