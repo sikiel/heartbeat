@@ -6,7 +6,7 @@ package com.capgemini.heartbeat;
  */
 public class HeartbeatFlow {
 	public static void main(String[] args) throws Exception {
-		HeartbeatProperties hp = new HeartbeatPropertiesManager("./src/main/resources/heartbeat.properties")
+		HeartbeatProperties hp = new HeartbeatPropertiesManager("./heartbeat.properties")
 				.getProperties();
 		TaskProperties jenkinsPrperties = new JenkinsProperties(hp.getJenkinsPropertiesPath());
 		TaskProperties gridPrperties = new GridProperties(hp.getGridPrpertiesPath());
