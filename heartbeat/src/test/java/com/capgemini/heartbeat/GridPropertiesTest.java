@@ -13,7 +13,7 @@ public class GridPropertiesTest {
 		TaskProperties gp = new GridProperties("./src/test/resources/jenkinsTest.json");
 		List<Property>pl = gp.getPropertiesList();
 		assertTrue(pl.size()==1);
-		assertEquals(pl.get(0).getUrl(),"123.456.789.11:8080");
+		assertEquals(pl.get(0).getUrl(),"http://123.456.789.11:8080");
 	}
 	@Test
 	public void testFileNotFoundException() {

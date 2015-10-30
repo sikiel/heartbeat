@@ -36,8 +36,11 @@ public class HeartbeatPropertiesManager {
 			String pathToJenkinsConfig = prop.getProperty("jenkins.config");
 			String pathToGridConfig = prop.getProperty("grid.config");
 			String pathToCsvReport = prop.getProperty("csv.report");
-
-			heartbeatProperties = new HeartbeatProperties(pathToJenkinsConfig, pathToGridConfig, pathToCsvReport);
+			Integer delayHours = Integer.parseInt(prop.getProperty("delay.hours"));
+			Integer delayMinutes = Integer.parseInt(prop.getProperty("delay.minutes"));
+			Integer delaySeconds = Integer.parseInt(prop.getProperty("delay.seconds"));
+			heartbeatProperties = new HeartbeatProperties(pathToJenkinsConfig, pathToGridConfig, pathToCsvReport,
+					delayHours, delayMinutes, delaySeconds);
 
 		} catch (FileNotFoundException fex) {
 

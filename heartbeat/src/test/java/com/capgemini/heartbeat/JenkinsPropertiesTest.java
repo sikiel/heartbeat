@@ -13,7 +13,7 @@ public class JenkinsPropertiesTest {
 		TaskProperties jp = new JenkinsProperties("./src/test/resources/jenkinsTest.json");
 		List<Property>pl = jp.getPropertiesList();
 		assertTrue(pl.size()==1);
-		assertEquals("123.456.789.11:8080", pl.get(0).getUrl());
+		assertEquals("http://123.456.789.11:8080", pl.get(0).getUrl());
 		assertEquals(((JenkinsProperty)pl.get(0)).getUsername(),"asd");
 		assertEquals(((JenkinsProperty)pl.get(0)).getPassword(),"123qwe");
 
