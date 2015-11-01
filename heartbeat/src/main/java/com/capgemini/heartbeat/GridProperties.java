@@ -14,11 +14,12 @@ public class GridProperties extends TaskProperties {
 	}
 
 	public List<Property> getPropertiesList() {
+		log.info("Reading Selenium Grid servers properties...");
 		JsonArray array = converter.convertFileToJSON(super.fileLocation);
 		if (array != null) {
 			for (Object jsonProperty : array) {
 				Property prop = new JenkinsProperty();
-				prop.setUrl(((JsonObject) jsonProperty).get("url").getAsString());
+				prop.setUrl(getProperty((JsonObject) jsonProperty,"url"));
 				super.propertiesList.add(prop);
 			}
 		}

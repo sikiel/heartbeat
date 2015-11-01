@@ -6,8 +6,10 @@ import java.net.URL;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class GridTaskService implements TaskService {
+	private static final Logger log = Logger.getLogger( GridTaskService.class.getName());
 	List<Property> properties;
 	private ResultCollector resultCollector;
 
@@ -22,6 +24,7 @@ public class GridTaskService implements TaskService {
 	}
 
 	private void prepareTasks() {
+		log.info("Checking Selenium Grid servers connections");
 		Iterator<Property> iter = properties.iterator();
 		while (iter.hasNext()) {
 			Property jp = iter.next();
@@ -29,7 +32,6 @@ public class GridTaskService implements TaskService {
 			try {
 				status = checkGrid(jp.getUrl());
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			String name = "GRID - " + jp.getUrl();

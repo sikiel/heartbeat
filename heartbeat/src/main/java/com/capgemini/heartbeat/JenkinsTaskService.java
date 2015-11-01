@@ -6,9 +6,10 @@ import java.net.URL;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class JenkinsTaskService implements TaskService {
-
+	private static final Logger log = Logger.getLogger( JenkinsTaskService.class.getName());
 	List<Property> properties;
 	private ResultCollector resultCollector;
 
@@ -24,6 +25,7 @@ public class JenkinsTaskService implements TaskService {
 
 	private void prepareTasks() {
 		Iterator<Property> iter = properties.iterator();
+		log.info("Checking Jenkins servers connections");
 		while (iter.hasNext()) {
 			;
 			JenkinsProperty jp = (JenkinsProperty) iter.next();
@@ -31,7 +33,6 @@ public class JenkinsTaskService implements TaskService {
 			try {
 				status = checkJenkins(jp.getUrl());
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			String name = "JENKINS - " + jp.getUrl();

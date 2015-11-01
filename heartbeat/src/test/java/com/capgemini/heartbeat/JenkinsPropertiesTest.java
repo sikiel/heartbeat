@@ -14,8 +14,40 @@ public class JenkinsPropertiesTest {
 		List<Property>pl = jp.getPropertiesList();
 		assertTrue(pl.size()==1);
 		assertEquals("http://123.456.789.11:8080", pl.get(0).getUrl());
-		assertEquals(((JenkinsProperty)pl.get(0)).getUsername(),"asd");
-		assertEquals(((JenkinsProperty)pl.get(0)).getPassword(),"123qwe");
+		assertEquals("asd",((JenkinsProperty)pl.get(0)).getUsername());
+		assertEquals("123qwe",((JenkinsProperty)pl.get(0)).getPassword());
+
+	}
+	@Test
+	public void testFileReadingEmptyProperties() {
+		TaskProperties jp = new JenkinsProperties("./src/test/resources/jenkinsTestEmpty.json");
+		List<Property>pl = jp.getPropertiesList();
+		assertTrue(pl.size()==6);
+		//-----------------------
+		assertEquals("http://123.456.789.11:8080", pl.get(0).getUrl());
+		assertEquals("asd",((JenkinsProperty)pl.get(0)).getUsername());
+		assertEquals("123qwe",((JenkinsProperty)pl.get(0)).getPassword());
+		//-----------------------
+		assertEquals("http://123.456.789.11:8080", pl.get(1).getUrl());
+		assertEquals("undefined",((JenkinsProperty)pl.get(1)).getUsername());
+		assertEquals("undefined",((JenkinsProperty)pl.get(1)).getPassword());
+		//-----------------------
+		assertEquals("http://123.456.789.11:8080", pl.get(2).getUrl());
+		assertEquals("undefined",((JenkinsProperty)pl.get(2)).getUsername());
+		assertEquals("123qwe",((JenkinsProperty)pl.get(2)).getPassword());
+		//-----------------------
+		assertEquals("http://123.456.789.11:8080", pl.get(3).getUrl());
+		assertEquals("asd",((JenkinsProperty)pl.get(3)).getUsername());
+		assertEquals("undefined",((JenkinsProperty)pl.get(3)).getPassword());
+		//-----------------------
+		assertEquals("undefined", pl.get(4).getUrl());
+		assertEquals("undefined",((JenkinsProperty)pl.get(4)).getUsername());
+		assertEquals("undefined",((JenkinsProperty)pl.get(4)).getPassword());
+		//-----------------------
+		assertEquals("http://123.456.789.11:8080", pl.get(5).getUrl());
+		assertEquals("",((JenkinsProperty)pl.get(5)).getUsername());
+		assertEquals("undefined",((JenkinsProperty)pl.get(5)).getPassword());
+
 
 	}
 	@Test

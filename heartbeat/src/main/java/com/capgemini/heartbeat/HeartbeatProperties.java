@@ -1,7 +1,5 @@
 package com.capgemini.heartbeat;
 
-import java.sql.Struct;
-
 public class HeartbeatProperties {
 	public static final HeartbeatProperties NULL_PROPERTY = new HeartbeatProperties("nullPath", "nullPath", "nullPath", 0,0,0);
 	private final String jenkinsPropertiesPath;
@@ -27,7 +25,7 @@ public class HeartbeatProperties {
 		this.jenkinsPropertiesPath = jenkinsPropertiesPath;
 		this.gridPrpertiesPath = gridPrpertiesPath;
 		this.csvReportPath = csvReportPath;
-		this.time = new Time(delayHours, delayMinutes, delayMinutes);
+		this.time = new Time(delayHours, delayMinutes, delaySeconds);
 
 	}
 
