@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.logging.Logger;
 
 public class JsonFileConverter {
@@ -25,6 +24,24 @@ public class JsonFileConverter {
 		}
 
 		return jsonArray;
+	}
+
+	public JsonArray getArray(JsonObject jsonProperty, String name) {
+		if (jsonProperty.get(name) != null) {
+			return jsonProperty.get(name).getAsJsonArray();
+		} else {
+			return new JsonArray();
+		}
+
+	}
+
+	public String getProperty(JsonObject jsonProperty, String name) {
+		if (jsonProperty.get(name) != null) {
+			return jsonProperty.get(name).getAsString();
+		} else {
+			return "undefined";
+		}
+
 	}
 
 }
