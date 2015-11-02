@@ -15,10 +15,13 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class GridTaskService implements TaskService {
 	private static final Logger log = Logger.getLogger(GridTaskService.class.getName());
-	private static String TARGET_SERVER_URL = "http://www.google.pl";
+	private String nodename = "";
+	private static String TEST_SERVER_URL = "http://www.google.pl";
 	private static Integer SERVER_OK = 200;
 	List<Property> properties;
 	private ResultCollector resultCollector;
@@ -65,41 +68,57 @@ public class GridTaskService implements TaskService {
 	private void checkNodes(GridProperty property) {
 
 		for (GridNode node : property.getNodesList()) {
-			try{
-			DesiredCapabilities browser = new DesiredCapabilities();
-			browser.setBrowserName(node.getBrowser());
-			//browser.setCapability("version",9);
-			browser.setPlatform(node.getPlatform());
-			testCodesCrud(browser, property);
-			}catch(WebDriverException e){
+			nodename = "SELENIUM Node - " + property.getUrl() + " " + node.getBrowser() + " v."
+					+ node.getBrowserVersion();
+			try {
+
+				test(property, node);
+
+			} catch (WebDriverException e) {
 				e.printStackTrace();
+				Long timestamp = new Date().getTime();
+				resultCollector.addResult(new TaskResult(timestamp, nodename,
+						"TEST FAILED Couldn't find browser with specified capabilities"));
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+				Long timestamp = new Date().getTime();
+				resultCollector.addResult(new TaskResult(timestamp, nodename, "TEST FAILED Problem with HUB URL"));
 			}
 		}
 
 	}
 
-	private void testCodesCrud(Capabilities browser, GridProperty property) {
-		WebDriver driver = null;
-		try {
-			driver = new RemoteWebDriver(new URL(property.getUrl() + "/wd/hub"), browser);
-			// // test starts in Codes entity list page
-			driver.get(TARGET_SERVER_URL);
-			driver.findElement(By.name("q")).sendKeys("selenium");
-			driver.findElement(By.xpath("//*[@id='tsf']/div[2]/div[3]/center/input[1]")).click();
+	private void test(GridProperty property, GridNode node) throws MalformedURLException, WebDriverException {
+		DesiredCapabilities browser = setCapabilities(node);
+		// -- test Selenium Node
+		// try connecting to google and searching for "selenium"
+		WebDriver driver = new RemoteWebDriver(new URL(property.getUrl() + "/wd/hub"), browser);
+		driver.get(TEST_SERVER_URL);
+		String loadedUrl = driver.getCurrentUrl();
+		WebDriverWait wait = new WebDriverWait(driver, 5);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("q")));
+		driver.findElement(By.name("q")).sendKeys("selenium");
+		driver.findElement(By.xpath("//*[@id='sblsbb']/button")).click();
+		// verify if the url has changed after search
+		Long timestamp = new Date().getTime();
+		resultCollector.addResult(new TaskResult(timestamp, nodename, verify(driver, loadedUrl)));
+		driver.quit();
 
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} finally {
-			if (driver != null) {
-				String result;
-				if(driver.getCurrentUrl().equals(TARGET_SERVER_URL+"/#q=selenium")) result="TEST SUCCESS";
-				else result="TEST FAILED";
-				String name = "SELENIUM Node ";
-				Long timestamp = new Date().getTime();
-				resultCollector.addResult(new TaskResult(timestamp, name, result));
-				driver.quit();
-			}
-		}
+	}
+
+	private DesiredCapabilities setCapabilities(GridNode node) {
+		DesiredCapabilities browser = new DesiredCapabilities();
+		browser.setBrowserName(node.getBrowser());
+		browser.setVersion(node.getBrowserVersion());
+		browser.setPlatform(node.getPlatform());
+		return browser;
+	}
+
+	private String verify(WebDriver driver, String loadedUrl) {
+		if (driver.getCurrentUrl().equals(loadedUrl + "#q=selenium"))
+			return "TEST SUCCESS";
+		else
+			return "TEST FAILED";
 	}
 
 }
