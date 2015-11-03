@@ -34,24 +34,21 @@ public class JenkinsTaskService implements TaskService {
 		LOG.info("Checking Jenkins servers connections");
 		while (iter.hasNext()) {
 			JenkinsProperty jp = (JenkinsProperty) iter.next();
+			String name = "JENKINS - " + jp.getUrl();
+			Long timestamp = new Date().getTime();
 
 			try {
 				if (!buildJenkinsJob(jp)) {
-					String name = "JENKINS - " + jp.getUrl();
-					Long timestamp = new Date().getTime();
 					resultCollector.addResult(new TaskResult(timestamp, name, "FAILED"));
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SAXException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				LOG.severe("The URL: " + jp.getUrl() + " is not valid.");
+				resultCollector.addResult(new TaskResult(timestamp, name, "URL NOT VALID"));
 			}
 		}
 	}
 
-	private boolean buildJenkinsJob(JenkinsProperty jp) throws IOException, SAXException {
+	private boolean buildJenkinsJob(JenkinsProperty jp) throws IOException {
 		URL url = new URL(jp.getUrl() + "/job/" + jp.getJobName() + "/build?token=build");
 		String userpass = jp.getUsername() + ":" + jp.getPassword();
 
