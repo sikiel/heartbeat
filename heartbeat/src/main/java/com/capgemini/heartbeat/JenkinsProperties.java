@@ -23,6 +23,7 @@ public class JenkinsProperties extends TaskProperties {
 				prop.setUrl(getProperty((JsonObject) jsonProperty,"url"));
 				((JenkinsProperty) prop).setUsername(getProperty((JsonObject) jsonProperty,"username"));
 				((JenkinsProperty) prop).setPassword(getProperty((JsonObject) jsonProperty,"password"));
+				((JenkinsProperty) prop).setJobName(getProperty((JsonObject) jsonProperty,"jobname"));
 				super.propertiesList.add(prop);
 			}
 		}

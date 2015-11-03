@@ -1,13 +1,15 @@
 [
 	{
-		"url": "http://10.40.157.122:8080",
-		"username": "asd",
-		"password": "123qwe"
+		"url": "http://10.40.157.43:8080/",
+		"username": "user1",
+		"password": "123qwe",
+		"jobname": "test"
 	},
 
 	{
 		"url": "http://10.40.156.129.:80",
 		"username": "asd",
-		"password": "123qwe"
+		"password": "123qwe",
+		"jobname": "test"
 	}
 ]

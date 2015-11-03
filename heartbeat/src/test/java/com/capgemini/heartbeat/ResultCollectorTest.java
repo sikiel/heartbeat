@@ -1,81 +1,68 @@
 package com.capgemini.heartbeat;
 
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Test;
 import org.junit.Assert;
 import org.junit.*;
 
 public class ResultCollectorTest {
-	
-
-
 
 	private static final String TWO = "two";
 	private static final String ONE = "one";
 	private static final String THREE = "three";
 	private ResultCollector results = new ResultCollector();
-	
 	private ResultCollector instance;
-	
+
 	@Before
 	public void setUp() {
 		this.instance = new ResultCollector();
 	}
-	
-	
-	
+
 	@Test
 	public void testCollectingStandAloneTaskResults() {
-		//given
-		
-		//when
+		// given
+
+		// when
 		addNewTaskResultToInstance(createTaskResultWithName(ONE));
 		addNewTaskResultToInstance(createTaskResultWithName(TWO));
-		
-		//then
+
+		// then
 		assertTaskResultIsAdded(ONE);
 		assertTaskResultIsAdded(TWO);
 	}
-	
+
 	@Test
 	public void testCollectingTaskAsAnotherResultCollector() {
-		//given
+		// given
 		createAnotherResultCollectorInstance();
 		addTaskToResults(createTaskResultWithName(ONE));
 		addTaskToResults(createTaskResultWithName(TWO));
-		
-		//when
+
+		// when
 		addNewResultsToInstance(results);
-		
-		
-		//then
+
+		// then
 		assertTaskResultIsAdded(ONE);
 		assertTaskResultIsAdded(TWO);
 	}
-	
-
 
 	@Test
 	public void testCollectingStandAloneTaskResultAndResultCollector() {
-		//given
+		// given
 		createAnotherResultCollectorInstance();
 		addTaskToResults(createTaskResultWithName(ONE));
 		addTaskToResults(createTaskResultWithName(TWO));
-		
-		//when
+
+		// when
 		addTaskToResults(createTaskResultWithName(THREE));
 		addNewResultsToInstance(results);
-		
-		//then
+
+		// then
 		assertTaskResultIsAdded(ONE);
 		assertTaskResultIsAdded(TWO);
 		assertTaskResultIsAdded(THREE);
-		
+
 	}
-	
+
 	private void createAnotherResultCollectorInstance() {
 		results = new ResultCollector();
 	}
@@ -84,14 +71,10 @@ public class ResultCollectorTest {
 		instance.addResults(results);
 	}
 
-
-
 	private void addTaskToResults(TaskResult taskResult) {
 		results.addResult(taskResult);
-		
+
 	}
-
-
 
 	private TaskResult createTaskResultWithName(String name) {
 		return new MockTask(1L, name, "success");
@@ -100,13 +83,13 @@ public class ResultCollectorTest {
 	private void addNewTaskResultToInstance(TaskResult task) {
 		instance.addResult(task);
 	}
-	
-	//assertions
+
+	// assertions
 
 	private void assertTaskResultIsAdded(String taskName) {
 		boolean isPresent = false;
-		for(TaskResult result : instance.getTasksResult()) {
-			if(result.getName().equals(taskName)) {
+		for (TaskResult result : instance.getTasksResult()) {
+			if (result.getName().equals(taskName)) {
 				isPresent = true;
 				break;
 			}

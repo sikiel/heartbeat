@@ -24,7 +24,7 @@ public class HeartbeatFlow {
 
 	public static void main(String[] args) throws Exception {
 		while (true) {
-			HeartbeatProperties hp = new HeartbeatPropertiesManager("./heartbeat.properties").getProperties();
+			HeartbeatProperties hp = new HeartbeatPropertiesManager("./src/main/resources/heartbeat.properties").getProperties();
 			TaskProperties jenkinsPrperties = new JenkinsProperties(hp.getJenkinsPropertiesPath());
 			TaskProperties gridPrperties = new GridProperties(hp.getGridPrpertiesPath());
 
