@@ -1,53 +1,80 @@
 package com.capgemini.heartbeat;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.MalformedURLException;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.openqa.selenium.WebDriverException;
+
 public class GridTaskService implements TaskService {
-	private static final Logger log = Logger.getLogger( GridTaskService.class.getName());
-	List<Property> properties;
+	private static final Logger LOG = Logger.getLogger(GridTaskService.class.getName());
+	List<Property> gridList;
 	private ResultCollector resultCollector;
+	protected GridConnectionTester connection;
 
 	public GridTaskService(TaskProperties gridPrperties) {
-		this.properties = gridPrperties.getPropertiesList();
+		this.gridList = gridPrperties.getPropertiesList();
 		resultCollector = new ResultCollector();
+		connection = new GridConnectionTester();
 	}
 
 	public ResultCollector getTasksResult() {
-		prepareTasks();
+		runTestsAndPrepareResults();
 		return resultCollector;
 	}
 
-	private void prepareTasks() {
-		log.info("Checking Selenium Grid servers connections");
-		Iterator<Property> iter = properties.iterator();
-		while (iter.hasNext()) {
-			Property jp = iter.next();
-			boolean status = false;
-			try {
-				status = checkGrid(jp.getUrl());
-			} catch (IOException e) {
-				e.printStackTrace();
+	private void runTestsAndPrepareResults() {
+		LOG.info("Checking Selenium Grid...");
+
+		for (Property hub : this.gridList) {
+			boolean hubStatus = checkHub(hub);
+			if (hubStatus) {
+				checkNodes((GridProperty) hub);
 			}
-			String name = "GRID - " + jp.getUrl();
-			Long timestamp = new Date().getTime();
-			resultCollector.addResult(new TaskResult(timestamp, name, status ? "SUCCESS" : "FAILED"));
 		}
+	}
+	private boolean checkHub(Property hub){
+		LOG.info("Test " + "SELENIUM HUB - " + hub.getUrl());
+		boolean hubStatus = false;
+		try {
+			hubStatus = connection.hubConnectionTest(hub);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		String name = "SELENIUM HUB - " + hub.getUrl();
+		Long timestamp = new Date().getTime();
+		resultCollector.addResult(new TaskResult(timestamp, name, hubStatus ? "PING SUCCESS" : "PING FAILED"));
+		return hubStatus;
+
 	}
 
-	private boolean checkGrid(String adress) throws IOException {
-		URL url = new URL(adress);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		conn.setRequestMethod("GET");
-		if (conn.getResponseCode() == 200) {
-			return true;
-		} else {
-			return false;
+	private void checkNodes(GridProperty hub) {
+
+		for (GridNode node : hub.getNodesList()) {
+			String nodename = "SELENIUM Node - " + hub.getUrl() + " " + node.getBrowser() + " v." + node.getBrowserVersion();
+			LOG.info("Test " + nodename);
+			try {
+
+				String result = connection.nodeConnectionTest(hub, node);
+				Long timestamp = new Date().getTime();
+				resultCollector.addResult(new TaskResult(timestamp, nodename, result));
+
+			} catch (WebDriverException e) {
+				e.printStackTrace();
+				Long timestamp = new Date().getTime();
+				resultCollector
+						.addResult(new TaskResult(timestamp, nodename, "TEST FAILED with " + e.getClass().getName()));
+
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+				Long timestamp = new Date().getTime();
+				resultCollector.addResult(new TaskResult(timestamp, nodename, "TEST FAILED Problem with HUB URL"));
+			}
 		}
+
 	}
+
+
 }

@@ -1,0 +1,16 @@
+[
+
+{
+	"url" : "http://11.40.170.54:4444",
+	"nodes" : [ {
+		"browser" : "internet explorer",
+		"platform" : "windows"
+	}, {
+		"browser" : "chrome",
+		"browserVersion" : "46"
+	} ]
+},
+
+{
+	"url" : "http://11.40.156.187:4444"
+} ]
