@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 import java.util.Iterator;
@@ -48,10 +49,9 @@ public class JenkinsTaskService implements TaskService {
 	}
 
 	private void checkBuilds() throws IOException, SAXException, ParserConfigurationException {
-		Iterator<JenkinsBuild> it = buildList.getBuildList().iterator();
-		while (it.hasNext()) {
+		List<JenkinsBuild> toDelete = new ArrayList<>();
 
-			JenkinsBuild jb = (JenkinsBuild) it.next();
+		for (JenkinsBuild jb : buildList.getBuildList()) {
 			URL url = new URL(jb.getJenkinsProperty().getUrl() + "/job/" + jb.getJenkinsProperty().getJobName()
 					+ "/lastBuild/api/xml?tree=result,building");
 			String userpass = jb.getJenkinsProperty().getUsername() + ":" + jb.getJenkinsProperty().getPassword();
@@ -84,15 +84,17 @@ public class JenkinsTaskService implements TaskService {
 				resultCollector.addResult(new TaskResult(timestamp, name, "IN PROGRESS"));
 				Long timeout = timestamp - jb.getTimestamp();
 				if (timeout > 900000) {
-					buildList.delete(jb);
+					toDelete.add(jb);
 				}
 			} else {
 				String name = "JENKINS - " + jb.getJenkinsProperty().getUrl();
 				Long timestamp = new Date().getTime();
 				resultCollector.addResult(new TaskResult(timestamp, name, getCharsFromElement(elementResult)));
-				buildList.delete(jb);
+				toDelete.add(jb);
 			}
-
+		}
+		for (JenkinsBuild jb : toDelete) {
+			buildList.delete(jb);
 		}
 	}
 
