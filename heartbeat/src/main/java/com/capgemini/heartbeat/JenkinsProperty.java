@@ -26,4 +26,14 @@ public class JenkinsProperty extends Property {
 	public void setJobName(String jobName) {
 		this.jobName = jobName;
 	}
+
+	@Override
+	public boolean equals(Object arg0) {
+		JenkinsProperty jp = (JenkinsProperty) arg0;
+		if (this.getUrl().equals(jp.getUrl()))
+			return true;
+		else
+			return false;
+	}
+
 }

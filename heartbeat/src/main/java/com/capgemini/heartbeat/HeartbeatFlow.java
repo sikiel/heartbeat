@@ -25,20 +25,19 @@ public class HeartbeatFlow {
 
 	public static void main(String[] args) throws Exception {
 
-		HeartbeatProperties hp = new HeartbeatPropertiesManager("./heartbeat.properties")
-				.getProperties();
+		HeartbeatProperties hp = new HeartbeatPropertiesManager("./heartbeat.properties").getProperties();
 		CSVReportCreator csvReportCreator = new CSVReportCreator(hp.getCsvReportPath());
 		csvReportCreator.createBackupFile();
 
+		TaskProperties jenkinsPrperties = new JenkinsProperties(hp.getJenkinsPropertiesPath());
+		TaskProperties gridPrperties = new GridProperties(hp.getGridPrpertiesPath());
+		TaskService jenkinsService = new JenkinsTaskService(jenkinsPrperties);
+		TaskService gridService = new GridTaskService(gridPrperties);
+
+		ResultCollector resultCollector = new ResultCollector();
+
 		while (true) {
-
-			TaskProperties jenkinsPrperties = new JenkinsProperties(hp.getJenkinsPropertiesPath());
-			TaskProperties gridPrperties = new GridProperties(hp.getGridPrpertiesPath());
-			TaskService jenkinsService = new JenkinsTaskService(jenkinsPrperties);
-			TaskService gridService = new GridTaskService(gridPrperties);
-
-			ResultCollector resultCollector = new ResultCollector();
-
+			resultCollector.flush();
 			resultCollector.addResults(jenkinsService.getTasksResult());
 			resultCollector.addResults(gridService.getTasksResult());
 

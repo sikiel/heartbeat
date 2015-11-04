@@ -19,6 +19,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.w3c.dom.CharacterData;
@@ -31,22 +32,23 @@ public class JenkinsTaskService implements TaskService {
 
 	public JenkinsTaskService(TaskProperties jenkinsPrperties) {
 		this.properties = jenkinsPrperties.getPropertiesList();
-		resultCollector = new ResultCollector();
-		buildList = new JenkinsBuildList();
+		this.resultCollector = new ResultCollector();
+		this.buildList = new JenkinsBuildList();
 	}
 
 	public ResultCollector getTasksResult() {
+		this.resultCollector.flush();
 		try {
 			checkBuilds();
 		} catch (IOException | SAXException | ParserConfigurationException e) {
 			LOG.severe("Build check failed");
 		}
 		prepareTasks();
-		return resultCollector;
+		return this.resultCollector;
 	}
 
-	private void checkBuilds()throws IOException, SAXException, ParserConfigurationException {
-		Iterator<JenkinsBuild> it = JenkinsBuildList.getBuildList().iterator();
+	private void checkBuilds() throws IOException, SAXException, ParserConfigurationException {
+		Iterator<JenkinsBuild> it = buildList.getBuildList().iterator();
 		while (it.hasNext()) {
 
 			JenkinsBuild jb = (JenkinsBuild) it.next();
@@ -93,24 +95,24 @@ public class JenkinsTaskService implements TaskService {
 
 		}
 	}
-		
-	
 
 	private void prepareTasks() {
 		Iterator<Property> iter = properties.iterator();
 		LOG.info("Checking Jenkins servers connections");
 		while (iter.hasNext()) {
 			JenkinsProperty jp = (JenkinsProperty) iter.next();
-			String name = "JENKINS - " + jp.getUrl();
-			Long timestamp = new Date().getTime();
+			if (!buildList.contains(jp.getUrl())) {
+				String name = "JENKINS - " + jp.getUrl();
+				Long timestamp = new Date().getTime();
 
-			try {
-				if (!buildJenkinsJob(jp)) {
-					resultCollector.addResult(new TaskResult(timestamp, name, "FAILED"));
+				try {
+					if (!buildJenkinsJob(jp)) {
+						resultCollector.addResult(new TaskResult(timestamp, name, "FAILED"));
+					}
+				} catch (IOException e) {
+					LOG.severe("The URL: " + jp.getUrl() + " is not valid.");
+					resultCollector.addResult(new TaskResult(timestamp, name, "URL NOT VALID"));
 				}
-			} catch (IOException e) {
-				LOG.severe("The URL: " + jp.getUrl() + " is not valid.");
-				resultCollector.addResult(new TaskResult(timestamp, name, "URL NOT VALID"));
 			}
 		}
 	}
@@ -125,13 +127,13 @@ public class JenkinsTaskService implements TaskService {
 		conn.setRequestMethod("POST");
 
 		if (conn.getResponseCode() == HttpURLConnection.HTTP_CREATED) {
-			buildList.add(new JenkinsBuild(jp, new Date().getTime()));
+			this.buildList.add(new JenkinsBuild(jp, new Date().getTime()));
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
+
 	private static String getCharsFromElement(Element e) {
 
 		Node child = e.getFirstChild();

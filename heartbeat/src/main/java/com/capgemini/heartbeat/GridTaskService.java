@@ -21,6 +21,7 @@ public class GridTaskService implements TaskService {
 	}
 
 	public ResultCollector getTasksResult() {
+		this.resultCollector.flush();
 		runTestsAndPrepareResults();
 		return resultCollector;
 	}
@@ -35,7 +36,8 @@ public class GridTaskService implements TaskService {
 			}
 		}
 	}
-	private boolean checkHub(Property hub){
+
+	private boolean checkHub(Property hub) {
 		LOG.info("Test " + "SELENIUM HUB - " + hub.getUrl());
 		boolean hubStatus = false;
 		try {
@@ -53,7 +55,8 @@ public class GridTaskService implements TaskService {
 	private void checkNodes(GridProperty hub) {
 
 		for (GridNode node : hub.getNodesList()) {
-			String nodename = "SELENIUM Node - " + hub.getUrl() + " " + node.getBrowser() + " v." + node.getBrowserVersion();
+			String nodename = "SELENIUM Node - " + hub.getUrl() + " " + node.getBrowser() + " v."
+					+ node.getBrowserVersion();
 			LOG.info("Test " + nodename);
 			try {
 
@@ -75,6 +78,5 @@ public class GridTaskService implements TaskService {
 		}
 
 	}
-
 
 }

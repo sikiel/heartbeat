@@ -1,10 +1,11 @@
 package com.capgemini.heartbeat;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class JenkinsBuildList {
 
-	private static ArrayList<JenkinsBuild> buildList;
+	private ArrayList<JenkinsBuild> buildList;
 
 	public JenkinsBuildList() {
 		buildList = new ArrayList<JenkinsBuild>();
@@ -18,8 +19,19 @@ public class JenkinsBuildList {
 		buildList.remove(jb);
 	}
 
-	public static ArrayList<JenkinsBuild> getBuildList() {
+	public ArrayList<JenkinsBuild> getBuildList() {
 		return buildList;
+	}
+
+	public boolean contains(String url) {
+		Iterator<JenkinsBuild> iter = buildList.iterator();
+		while (iter.hasNext()) {
+			JenkinsBuild jb = iter.next();
+			if (jb.getJenkinsProperty().getUrl().equals(url)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
