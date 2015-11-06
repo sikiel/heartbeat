@@ -1,15 +1,13 @@
 package com.capgemini.heartbeat;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
-
 import org.openqa.selenium.WebDriverException;
 
 public class GridTaskService implements TaskService {
-	private static final Logger LOG = Logger.getLogger(GridTaskService.class.getName());
 	List<Property> gridList;
 	private ResultCollector resultCollector;
 	protected GridConnectionTester connection;
@@ -27,7 +25,7 @@ public class GridTaskService implements TaskService {
 	}
 
 	private void runTestsAndPrepareResults() {
-		LOG.info("Checking Selenium Grid...");
+		HeartbeatFlow.log.info("Checking Selenium Grid...");
 
 		for (Property hub : this.gridList) {
 			boolean hubStatus = checkHub(hub);
@@ -38,12 +36,14 @@ public class GridTaskService implements TaskService {
 	}
 
 	private boolean checkHub(Property hub) {
-		LOG.info("Test " + "SELENIUM HUB - " + hub.getUrl());
+		HeartbeatFlow.log.info("Test " + "SELENIUM HUB - " + hub.getUrl());
 		boolean hubStatus = false;
 		try {
 			hubStatus = connection.hubConnectionTest(hub);
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch(ConnectException e){
+			HeartbeatFlow.log.severe("Hub TEST FAILED with " + e.getClass().getName());
+		}catch (IOException e) {
+			HeartbeatFlow.log.severe("Hub TEST FAILED with " + e.getClass().getName());
 		}
 		String name = "SELENIUM HUB - " + hub.getUrl();
 		Long timestamp = new Date().getTime();
@@ -57,7 +57,7 @@ public class GridTaskService implements TaskService {
 		for (GridNode node : hub.getNodesList()) {
 			String nodename = "SELENIUM Node - " + hub.getUrl() + " " + node.getBrowser() + " v."
 					+ node.getBrowserVersion();
-			LOG.info("Test " + nodename);
+			HeartbeatFlow.log.info("Test " + nodename);
 			try {
 
 				String result = connection.nodeConnectionTest(hub, node);
@@ -69,11 +69,13 @@ public class GridTaskService implements TaskService {
 				Long timestamp = new Date().getTime();
 				resultCollector
 						.addResult(new TaskResult(timestamp, nodename, "TEST FAILED with " + e.getClass().getName()));
+				HeartbeatFlow.log.severe("Node TEST FAILED with " + e.getClass().getName());
 
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 				Long timestamp = new Date().getTime();
 				resultCollector.addResult(new TaskResult(timestamp, nodename, "TEST FAILED Problem with HUB URL"));
+				HeartbeatFlow.log.severe("Node TEST FAILED with " + e.getClass().getName());
 			}
 		}
 

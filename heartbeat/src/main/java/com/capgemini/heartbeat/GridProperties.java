@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.google.gson.JsonNull;
 
 public class GridProperties extends TaskProperties {
 	public GridProperties(String fileLocation) {
@@ -12,28 +12,30 @@ public class GridProperties extends TaskProperties {
 	}
 
 	public List<Property> getPropertiesList() {
-		log.info("Reading Selenium Grid servers properties...");
+		HeartbeatFlow.log.info("Reading Selenium Grid servers properties...");
 		JsonArray array = converter.convertFileToJSON(super.fileLocation);
-		if (array != null) {
+		if (!array.getClass().equals(JsonNull.class) & array != null) {
 			for (Object jsonProperty : array) {
 				GridProperty prop = new GridProperty();
-				prop.setUrl(converter.getProperty((JsonObject) jsonProperty, "url"));
-				prop.setNodesList(nodesArray((JsonObject) jsonProperty, "nodes"));
+				prop.setUrl(converter.getProperty(jsonProperty, "url"));
+				prop.setNodesList(nodesArray(jsonProperty, "nodes"));
 				super.propertiesList.add(prop);
 			}
 		}
 		return super.propertiesList;
 	}
 
-	private ArrayList<GridNode> nodesArray(JsonObject jsonProperty, String name) {
+	private ArrayList<GridNode> nodesArray(Object jsonProperty, String name) {
 		JsonArray jsonArray = converter.getArray(jsonProperty, name);
 		ArrayList<GridNode> nodes = new ArrayList<GridNode>();
 		for (Object jsonNodeProperty : jsonArray) {
 			GridNode node = new GridNode();
-			node.setBrowser(converter.getProperty((JsonObject) jsonNodeProperty, "browser"));
-			node.setBrowserVersion(converter.getProperty((JsonObject) jsonNodeProperty, "browserVersion"));
-			node.setPlatform(converter.getProperty((JsonObject) jsonNodeProperty, "platform"));
-			nodes.add(node);
+			
+				node.setBrowser(converter.getProperty(jsonNodeProperty, "browser"));
+				node.setBrowserVersion(converter.getProperty(jsonNodeProperty, "browserVersion"));
+				node.setPlatform(converter.getProperty(jsonNodeProperty, "platform"));
+				nodes.add(node);
+			
 
 		}
 

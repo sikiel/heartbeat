@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.logging.Logger;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
@@ -15,12 +13,12 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class GridConnectionTester {
-	private static final Logger LOG = Logger.getLogger(GridConnectionTester.class.getName());
+
 	private static String TEST_SERVER_URL = "http://www.google.pl";
 	private static Integer SERVER_OK = 200;
 	
 	public boolean hubConnectionTest(Property property) throws IOException {
-		LOG.info("Ping server " + property.getUrl());
+		HeartbeatFlow.log.info("Ping server " + property.getUrl());
 		URL url = new URL(property.getUrl());
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("GET");

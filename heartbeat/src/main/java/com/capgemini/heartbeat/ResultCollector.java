@@ -25,11 +25,6 @@ public class ResultCollector {
 		results.add(tasksResult);
 	}
 
-	public Object getResults() {
-
-		return null;
-	}
-
 	public void flush() {
 		if (!this.results.isEmpty())
 			this.results = new ArrayList<>();

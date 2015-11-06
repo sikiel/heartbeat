@@ -1,12 +1,6 @@
 package com.capgemini.heartbeat;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.RestoreAction;
 
 public class CSVReportCreator {
 
@@ -32,12 +26,13 @@ public class CSVReportCreator {
 
 	public void updateReportWith(List<TaskResult> results) {
 
-		System.out.println("Results size: " + results.size());
+		HeartbeatFlow.log.info("Updating CSV report");
 		ReportFile report = getReportFile();
 
 		checkIfBackupExists();
 
 		if (isUsed(report)) {
+			HeartbeatFlow.log.info("Writing to backup");
 			write(results, backup);
 			return;
 		}
@@ -60,6 +55,7 @@ public class CSVReportCreator {
 
 	private void update(ReportFile report, BackupFile backup) {
 		if (isNotEmpty(backup)) {
+			HeartbeatFlow.log.info("Updating CSV report from backup");
 			report.update(backup);
 		}
 		flush(backup);
@@ -71,6 +67,7 @@ public class CSVReportCreator {
 	}
 
 	private void write(List<TaskResult> results, FileZZZ destinantionFile) {
+		HeartbeatFlow.log.info("Writing to file.");
 		destinantionFile.wirte(results);
 	}
 

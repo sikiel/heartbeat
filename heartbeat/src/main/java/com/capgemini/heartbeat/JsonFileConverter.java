@@ -2,14 +2,17 @@ package com.capgemini.heartbeat;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.logging.Logger;
+
+import org.openqa.selenium.remote.JsonException;
 
 public class JsonFileConverter {
-	private static final Logger log = Logger.getLogger(JsonFileConverter.class.getName());
+
 	public static String DEFAULT_PROPERTY_VALUE = "";
 
 	public JsonArray convertFileToJSON(String fileName) {
@@ -20,28 +23,35 @@ public class JsonFileConverter {
 			JsonParser parser = new JsonParser();
 			JsonElement jsonElement = parser.parse(new FileReader(fileName));
 			jsonArray = jsonElement.getAsJsonArray();
+		} catch (JsonSyntaxException e) {
+			HeartbeatFlow.log.severe(e.toString());
 		} catch (FileNotFoundException e) {
-			log.severe(e.toString());
+			HeartbeatFlow.log.severe(e.toString());
+		} catch (JsonException e) {
+			HeartbeatFlow.log.severe(e.toString());
 		}
 
 		return jsonArray;
 	}
 
-	public JsonArray getArray(JsonObject jsonProperty, String name) {
-		if (jsonProperty.get(name) != null) {
-			return jsonProperty.get(name).getAsJsonArray();
-		} else {
-			return new JsonArray();
+	public JsonArray getArray(Object jsonProperty, String name) {
+		if (!jsonProperty.getClass().equals(JsonNull.class)) {
+			if (((JsonObject) jsonProperty).get(name) != null) {
+				return ((JsonObject) jsonProperty).get(name).getAsJsonArray();
+			}
 		}
+		return new JsonArray();
 
 	}
 
-	public String getProperty(JsonObject jsonProperty, String name) {
-		if (jsonProperty.get(name) != null) {
-			return jsonProperty.get(name).getAsString();
-		} else {
-			return DEFAULT_PROPERTY_VALUE;
+	public String getProperty(Object jsonProperty, String name) {
+
+		if (!jsonProperty.getClass().equals(JsonNull.class)) {
+			if (((JsonObject) jsonProperty).get(name) != null) {
+				return ((JsonObject) jsonProperty).get(name).getAsString();
+			}
 		}
+		return DEFAULT_PROPERTY_VALUE;
 
 	}
 

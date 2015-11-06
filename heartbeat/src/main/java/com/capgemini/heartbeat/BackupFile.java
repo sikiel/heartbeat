@@ -4,18 +4,14 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
-import java.nio.charset.Charset;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
 public class BackupFile extends FileZZZ {
 
 	private FileChannel fileChannel;
-	private Path backupPath;
 	private FileLock lock;
 	private RandomAccessFile randomAccessFile;
 	private File file;
@@ -76,7 +72,7 @@ public class BackupFile extends FileZZZ {
 	}
 
 	private void createBackupFile(String path) {
-		this.backupPath = Paths.get(path);
+		Paths.get(path);
 		try {
 			this.file = new File(path);
 			if (!file.exists()) {

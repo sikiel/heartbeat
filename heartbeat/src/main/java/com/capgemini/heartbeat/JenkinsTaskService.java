@@ -5,13 +5,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -26,7 +26,7 @@ import org.xml.sax.SAXException;
 import org.w3c.dom.CharacterData;
 
 public class JenkinsTaskService implements TaskService {
-	private static final Logger LOG = Logger.getLogger(JenkinsTaskService.class.getName());
+
 	List<Property> properties;
 	private ResultCollector resultCollector;
 	private JenkinsBuildList buildList;
@@ -42,7 +42,7 @@ public class JenkinsTaskService implements TaskService {
 		try {
 			checkBuilds();
 		} catch (IOException | SAXException | ParserConfigurationException e) {
-			LOG.severe("Build check failed");
+			HeartbeatFlow.log.severe("Build check failed");
 		}
 		prepareTasks();
 		return this.resultCollector;
@@ -59,7 +59,7 @@ public class JenkinsTaskService implements TaskService {
 			String basicAuth = "Basic " + new String(Base64.getEncoder().encode(userpass.getBytes()));
 			conn.setRequestProperty("Authorization", basicAuth);
 			conn.setRequestMethod("GET");
-			LOG.info(conn.getResponseMessage());
+			HeartbeatFlow.log.info(conn.getResponseMessage());
 
 			BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			String inputLine;
@@ -100,7 +100,7 @@ public class JenkinsTaskService implements TaskService {
 
 	private void prepareTasks() {
 		Iterator<Property> iter = properties.iterator();
-		LOG.info("Checking Jenkins servers connections");
+		HeartbeatFlow.log.info("Checking Jenkins servers connections");
 		while (iter.hasNext()) {
 			JenkinsProperty jp = (JenkinsProperty) iter.next();
 			if (!buildList.contains(jp.getUrl())) {
@@ -111,15 +111,18 @@ public class JenkinsTaskService implements TaskService {
 					if (!buildJenkinsJob(jp)) {
 						resultCollector.addResult(new TaskResult(timestamp, name, "FAILED"));
 					}
-				} catch (IOException e) {
-					LOG.severe("The URL: " + jp.getUrl() + " is not valid.");
+				}catch (MalformedURLException e){
+					HeartbeatFlow.log.severe("The URL: " + jp.getUrl() + " is not valid.");
 					resultCollector.addResult(new TaskResult(timestamp, name, "URL NOT VALID"));
+				} catch (IOException e) {
+					HeartbeatFlow.log.severe("CAN'T CONNECT to: " + jp.getUrl());
+					resultCollector.addResult(new TaskResult(timestamp, name, "CAN'T CONNECT"));
 				}
 			}
 		}
 	}
 
-	private boolean buildJenkinsJob(JenkinsProperty jp) throws IOException {
+	private boolean buildJenkinsJob(JenkinsProperty jp) throws MalformedURLException, IOException   {
 		URL url = new URL(jp.getUrl() + "/job/" + jp.getJobName() + "/build?token=build");
 		String userpass = jp.getUsername() + ":" + jp.getPassword();
 
