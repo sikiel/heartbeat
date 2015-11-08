@@ -2,10 +2,14 @@ package com.capgemini.heartbeat;
 
 import java.io.IOException;
 import java.net.ConnectException;
-import java.net.MalformedURLException;
 import java.util.Date;
 import java.util.List;
-import org.openqa.selenium.WebDriverException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class GridTaskService implements TaskService {
 	List<Property> gridList;
@@ -40,9 +44,9 @@ public class GridTaskService implements TaskService {
 		boolean hubStatus = false;
 		try {
 			hubStatus = connection.hubConnectionTest(hub);
-		} catch(ConnectException e){
+		} catch (ConnectException e) {
 			HeartbeatFlow.log.severe("Hub TEST FAILED with " + e.getClass().getName());
-		}catch (IOException e) {
+		} catch (IOException e) {
 			HeartbeatFlow.log.severe("Hub TEST FAILED with " + e.getClass().getName());
 		}
 		String name = "SELENIUM HUB - " + hub.getUrl();
@@ -53,31 +57,38 @@ public class GridTaskService implements TaskService {
 	}
 
 	private void checkNodes(GridProperty hub) {
-
+		// wrap node check in timeouting thread
+		ExecutorService service = Executors.newFixedThreadPool(1);
+		//iterate over nodes
 		for (GridNode node : hub.getNodesList()) {
 			String nodename = "SELENIUM Node - " + hub.getUrl() + " " + node.getBrowser() + " v."
 					+ node.getBrowserVersion();
-			HeartbeatFlow.log.info("Test " + nodename);
+			NodeCheck nc = new NodeCheck(node, hub, connection, resultCollector);
+			Future<String> futureResult = service.submit(nc);
 			try {
-
-				String result = connection.nodeConnectionTest(hub, node);
+				//set thread timeout
+				futureResult.get(4, TimeUnit.MINUTES);
+			} catch (TimeoutException e) {
+				futureResult.cancel(true);
 				Long timestamp = new Date().getTime();
-				resultCollector.addResult(new TaskResult(timestamp, nodename, result));
-
-			} catch (WebDriverException e) {
-				e.printStackTrace();
+				resultCollector.addResult(new TaskResult(timestamp, nodename, "TEST FAILED with timeout"));
+				HeartbeatFlow.log.severe("Node TEST FAILED with " + e.getClass().getName());
+			} catch (InterruptedException e) {
+				futureResult.cancel(true);
 				Long timestamp = new Date().getTime();
 				resultCollector
 						.addResult(new TaskResult(timestamp, nodename, "TEST FAILED with " + e.getClass().getName()));
 				HeartbeatFlow.log.severe("Node TEST FAILED with " + e.getClass().getName());
-
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
+			} catch (ExecutionException e) {
+				futureResult.cancel(true);
 				Long timestamp = new Date().getTime();
-				resultCollector.addResult(new TaskResult(timestamp, nodename, "TEST FAILED Problem with HUB URL"));
+				resultCollector
+						.addResult(new TaskResult(timestamp, nodename, "TEST FAILED with " + e.getClass().getName()));
 				HeartbeatFlow.log.severe("Node TEST FAILED with " + e.getClass().getName());
 			}
+
 		}
+		service.shutdown();
 
 	}
 
