@@ -1,9 +1,6 @@
 package com.capgemini.heartbeat;
 
-import java.net.MalformedURLException;
 import java.util.logging.Logger;
-
-import org.openqa.selenium.WebDriverException;
 
 public class GridConnectionTesterMock extends GridConnectionTester {
 	private static final Logger LOG = Logger.getLogger(GridConnectionTesterMock.class.getName());
@@ -16,8 +13,7 @@ public class GridConnectionTesterMock extends GridConnectionTester {
 
 	}
 
-	public String nodeConnectionTest(GridProperty property, GridNode node)
-			throws MalformedURLException, WebDriverException {
+	public String nodeConnectionTest(GridProperty property, GridNode node){
 		LOG.info("Mocking node test result to: " + nodeTestResult);
 		return nodeTestResult;
 	}
