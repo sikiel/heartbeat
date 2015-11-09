@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
@@ -12,7 +13,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class GridConnectionTester {
+public class GridConnectionTester{
 
 	private static String TEST_SERVER_URL = "http://www.google.pl";
 	private static Integer SERVER_OK = 200;
@@ -33,7 +34,10 @@ public class GridConnectionTester {
 		// -- test Selenium Node
 		// try connecting to google and searching for "selenium"
 		WebDriver driver = new RemoteWebDriver(new URL(property.getUrl() + "/wd/hub"), browser);
+		//driver.manage().timeouts().pageLoadTimeout(4, TimeUnit.SECONDS);
+	
 		driver.get(TEST_SERVER_URL);
+		
 		String loadedUrl = driver.getCurrentUrl();
 		WebDriverWait wait = new WebDriverWait(driver, 5);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("q")));
@@ -60,4 +64,5 @@ public class GridConnectionTester {
 		else
 			return "TEST FAILED";
 	}
+
 }
