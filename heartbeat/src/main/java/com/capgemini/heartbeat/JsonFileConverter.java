@@ -24,11 +24,11 @@ public class JsonFileConverter {
 			JsonElement jsonElement = parser.parse(new FileReader(fileName));
 			jsonArray = jsonElement.getAsJsonArray();
 		} catch (JsonSyntaxException e) {
-			HeartbeatFlow.log.severe(e.toString());
+			HeartbeatFlow.log.error(e.toString());
 		} catch (FileNotFoundException e) {
-			HeartbeatFlow.log.severe(e.toString());
+			HeartbeatFlow.log.error(e.toString());
 		} catch (JsonException e) {
-			HeartbeatFlow.log.severe(e.toString());
+			HeartbeatFlow.log.error(e.toString());
 		}
 
 		return jsonArray;

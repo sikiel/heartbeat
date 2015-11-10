@@ -49,9 +49,9 @@ public class HeartbeatPropertiesManager {
 		} catch (FileNotFoundException fex) {
 
 		} catch (NumberFormatException nex) {
-			HeartbeatFlow.log.severe("Can't parse properties. Check the heartbeat.properties file.");
+			HeartbeatFlow.log.error("Can't parse properties. Check the heartbeat.properties file.");
 		} catch (IOException ex) {
-			HeartbeatFlow.log.severe("Can't load a properties file. Check the heartbeat.properties file.");
+			HeartbeatFlow.log.error("Can't load a properties file. Check the heartbeat.properties file.");
 		} finally {
 			if (input != null) {
 				try {

@@ -17,13 +17,12 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.w3c.dom.CharacterData;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.w3c.dom.CharacterData;
 
 public class JenkinsTaskService implements TaskService {
 
@@ -37,6 +36,7 @@ public class JenkinsTaskService implements TaskService {
 		this.buildList = new JenkinsBuildList();
 	}
 
+	@Override
 	public ResultCollector getTasksResult() {
 		this.resultCollector.flush();
 		try {

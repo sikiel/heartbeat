@@ -6,6 +6,8 @@ import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import java.util.Date;
 
+import org.apache.logging.log4j.Logger;
+
 import com.capgemini.heartbeat.HeartbeatProperties.ReportProperties;
 
 public class ReportManager {

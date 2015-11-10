@@ -22,7 +22,7 @@ public class HeartbeatFlow {
 	}
 
 	public static void main(String[] args) throws Exception {
-		log.info("Starting Heartbeat service");
+        log.info("Starting Heartbeat service");
 		HeartbeatProperties hp = new HeartbeatPropertiesManager("./heartbeat.properties").getProperties();
 		CSVReportCreator csvReportCreator = new CSVReportCreator(hp.getCsvReportPath());
 		csvReportCreator.createBackupFile();
