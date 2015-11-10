@@ -49,8 +49,12 @@ public class ReportFile extends FileZZZ {
 		return false;
 	}
 
-	private boolean fileExists() {
+	public boolean fileExists() {
 		return file.exists();
+	}
+
+	public File getFile() {
+		return file;
 	}
 
 	public void update(BackupFile backup) {

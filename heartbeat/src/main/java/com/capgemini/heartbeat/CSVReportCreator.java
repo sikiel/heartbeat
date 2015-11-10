@@ -75,7 +75,7 @@ public class CSVReportCreator {
 		return file.isUsed();
 	}
 
-	private ReportFile getReportFile() {
+	public ReportFile getReportFile() {
 		return new ReportFile(pathWithCsvFile);
 	}
 

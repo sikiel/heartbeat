@@ -39,12 +39,19 @@ public class HeartbeatPropertiesManager {
 			Integer delayHours = Integer.parseInt(prop.getProperty("delay.hours"));
 			Integer delayMinutes = Integer.parseInt(prop.getProperty("delay.minutes"));
 			Integer delaySeconds = Integer.parseInt(prop.getProperty("delay.seconds"));
+			Integer createReport = Integer.parseInt(prop.getProperty("report.create"));
+			Integer deleteReport = Integer.parseInt(prop.getProperty("report.delete"));
+			String pathToOld = prop.getProperty("report.path");
 			heartbeatProperties = new HeartbeatProperties(pathToJenkinsConfig, pathToGridConfig, pathToCsvReport,
 					delayHours, delayMinutes, delaySeconds);
+			heartbeatProperties.setReportProperties(createReport, deleteReport, pathToOld);
 
 		} catch (FileNotFoundException fex) {
 
+		} catch (NumberFormatException nex) {
+			HeartbeatFlow.log.severe("Can't parse properties. Check the heartbeat.properties file.");
 		} catch (IOException ex) {
+			HeartbeatFlow.log.severe("Can't load a properties file. Check the heartbeat.properties file.");
 		} finally {
 			if (input != null) {
 				try {
