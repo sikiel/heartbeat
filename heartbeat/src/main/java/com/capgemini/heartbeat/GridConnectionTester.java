@@ -52,7 +52,7 @@ public class GridConnectionTester {
 			driver.quit();
 		} catch (Exception e) {
 			futureResult.cancel(true);
-			HeartbeatFlow.log.severe("Node TEST FAILED with " + e.getClass().getName() + "message: " + e.getMessage());
+			HeartbeatFlow.log.error("Node TEST FAILED with " + e.getClass().getName() + "message: " + e.getMessage());
 			result = "TEST FAILED with " + e.getClass().toString();
 		}
 		service.shutdown();

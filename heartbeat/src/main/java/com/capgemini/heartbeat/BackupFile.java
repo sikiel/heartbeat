@@ -35,7 +35,7 @@ public class BackupFile extends FileZZZ {
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			HeartbeatFlow.log.error(e.toString());
 		}
 	}
 
@@ -45,7 +45,7 @@ public class BackupFile extends FileZZZ {
 			fileChannel.truncate(0L);
 			this.lock = fileChannel.lock();
 		} catch (IOException e) {
-			e.printStackTrace();
+			HeartbeatFlow.log.error(e.toString());
 		}
 
 	}
@@ -57,7 +57,7 @@ public class BackupFile extends FileZZZ {
 			this.randomAccessFile.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			HeartbeatFlow.log.error(e.toString());
 		}
 	}
 
@@ -67,7 +67,7 @@ public class BackupFile extends FileZZZ {
 			target.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			HeartbeatFlow.log.error(e.toString());
 		}
 	}
 
@@ -83,7 +83,7 @@ public class BackupFile extends FileZZZ {
 			this.lock = fileChannel.lock();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			HeartbeatFlow.log.error(e.toString());
 		}
 	}
 }

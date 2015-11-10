@@ -39,9 +39,9 @@ public class GridTaskService implements TaskService {
 		try {
 			hubStatus = connection.hubConnectionTest(hub);
 		} catch (ConnectException e) {
-			HeartbeatFlow.log.severe("Hub TEST FAILED with " + e.getClass().getName());
+			HeartbeatFlow.log.error("Hub TEST FAILED with " + e.getClass().getName());
 		} catch (IOException e) {
-			HeartbeatFlow.log.severe("Hub TEST FAILED with " + e.getClass().getName());
+			HeartbeatFlow.log.error("Hub TEST FAILED with " + e.getClass().getName());
 		}
 		String name = "SELENIUM HUB - " + hub.getUrl();
 		Long timestamp = new Date().getTime();
@@ -63,5 +63,4 @@ public class GridTaskService implements TaskService {
 		}
 
 	}
-
 }

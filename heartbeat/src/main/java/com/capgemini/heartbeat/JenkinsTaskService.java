@@ -42,7 +42,7 @@ public class JenkinsTaskService implements TaskService {
 		try {
 			checkBuilds();
 		} catch (IOException | SAXException | ParserConfigurationException e) {
-			HeartbeatFlow.log.severe("Build check failed");
+			HeartbeatFlow.log.error("Build check failed");
 		}
 		prepareTasks();
 		return this.resultCollector;
@@ -112,10 +112,10 @@ public class JenkinsTaskService implements TaskService {
 						resultCollector.addResult(new TaskResult(timestamp, name, "FAILED"));
 					}
 				}catch (MalformedURLException e){
-					HeartbeatFlow.log.severe("The URL: " + jp.getUrl() + " is not valid.");
+					HeartbeatFlow.log.error("The URL: " + jp.getUrl() + " is not valid.");
 					resultCollector.addResult(new TaskResult(timestamp, name, "URL NOT VALID"));
 				} catch (IOException e) {
-					HeartbeatFlow.log.severe("CAN'T CONNECT to: " + jp.getUrl());
+					HeartbeatFlow.log.error("CAN'T CONNECT to: " + jp.getUrl());
 					resultCollector.addResult(new TaskResult(timestamp, name, "CAN'T CONNECT"));
 				}
 			}
