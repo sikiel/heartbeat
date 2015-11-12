@@ -16,7 +16,7 @@ public class ReportManager {
 
 	public static final int DAY_MULTIPLIER = 86400000;
 	private long createReportDelay; // miliseconds
-	private int deleteReportDelay; // days
+	private int deleteReportDelay; // miliseconds
 	private String pathToOld;
 	private Date lastReportCreate;
 
@@ -60,10 +60,11 @@ public class ReportManager {
 			}
 		}
 		try {
-			deleteOldReports(new File(pathToOld));
+			File dirs = new File(pathToOld);
+			dirs.mkdirs();
+			deleteOldReports(dirs);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.error("Report manager FAILED with " + e.getClass().getName());
 		}
 	}
 
