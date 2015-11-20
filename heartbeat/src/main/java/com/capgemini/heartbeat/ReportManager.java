@@ -16,7 +16,7 @@ public class ReportManager {
 
 	public static final int DAY_MULTIPLIER = 86400000;
 	private long createReportDelay; // miliseconds
-	private int deleteReportDelay; // miliseconds
+	private long deleteReportDelay; // miliseconds
 	private String pathToOld;
 	private Date lastReportCreate;
 
@@ -93,7 +93,8 @@ public class ReportManager {
 	private String dateToString(Date date) {
 		String str = date.toLocaleString();
 		String[] parts = str.split(" ");
-		return parts[0];
+		String[] hourAndMin = parts[1].split(":");
+		return parts[0]+"_" + hourAndMin[0] + hourAndMin[1];
 	}
 
 }
