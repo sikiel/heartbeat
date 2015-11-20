@@ -80,21 +80,13 @@ public class ReportManager {
 				}
 			}
 		}
-
-		/*
-		 * String command = String.format(
-		 * "forfiles -p \"C:\\OLD\\\" -s -m *.* /D -%d /C \"cmd /c del @path\"",
-		 * this.deleteReportDelay); System.out.println(command);
-		 * Runtime.getRuntime().exec(command);
-		 */
 	}
 
 	@SuppressWarnings("deprecation")
 	private String dateToString(Date date) {
 		String str = date.toLocaleString();
 		String[] parts = str.split(" ");
-		String[] hourAndMin = parts[1].split(":");
-		return parts[0]+"_" + hourAndMin[0] + hourAndMin[1];
+		return parts[0];
 	}
 
 }
