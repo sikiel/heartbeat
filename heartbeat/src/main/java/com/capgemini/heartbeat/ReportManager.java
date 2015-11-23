@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.logging.log4j.Logger;
@@ -82,11 +83,9 @@ public class ReportManager {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	private String dateToString(Date date) {
-		String str = date.toLocaleString();
-		String[] parts = str.split(" ");
-		return parts[0];
+		SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+		return dateFormatter.format(date);
 	}
 
 }
