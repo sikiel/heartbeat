@@ -15,15 +15,14 @@ public class ReportManager {
 
 	Logger LOG = HeartbeatFlow.log;
 
-	public static final int DAY_MULTIPLIER = 86400000;
-	private long createReportDelay; // miliseconds
-	private long deleteReportDelay; // miliseconds
+	private int createReportDelay; // days
+	private int deleteReportDelay; // days
 	private String pathToOld;
 	private Date lastReportCreate;
 
 	public ReportManager(ReportProperties rp) {
-		this.createReportDelay = rp.CREATE * DAY_MULTIPLIER;
-		this.deleteReportDelay = rp.DELETE * DAY_MULTIPLIER;
+		this.createReportDelay = rp.CREATE; // * DAY_MULTIPLIER;
+		this.deleteReportDelay = rp.DELETE; // * DAY_MULTIPLIER;
 		this.pathToOld = rp.PATH_TO_OLD;
 	}
 
@@ -33,8 +32,8 @@ public class ReportManager {
 			if (lastReportCreate != null) {
 				File file = reportFile.getFile();
 				Date fileDate = new Date(file.lastModified());
-				long diference = fileDate.getTime() - lastReportCreate.getTime();
-				if (diference > createReportDelay) {
+				int diference = getDayOfTheYear(fileDate) - getDayOfTheYear(lastReportCreate);
+				if (diference >= createReportDelay) {
 					try {
 						String fileName = String.format("report_%s.csv", dateToString(fileDate));
 						File target = new File(pathToOld + "\\" + fileName);
@@ -74,8 +73,8 @@ public class ReportManager {
 			if (fileEntry.isDirectory()) {
 				deleteOldReports(fileEntry);
 			} else {
-				long difference = new Date().getTime() - fileEntry.lastModified();
-				if (difference > this.deleteReportDelay) {
+				long difference = getDayOfTheYear(new Date()) - getDayOfTheYear(new Date(fileEntry.lastModified()));
+				if (difference >= this.deleteReportDelay) {
 					LOG.info("Removing outdated report file: " + fileEntry.getAbsolutePath());
 					fileEntry.delete();
 				}
@@ -86,6 +85,11 @@ public class ReportManager {
 	private String dateToString(Date date) {
 		SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
 		return dateFormatter.format(date);
+	}
+
+	private int getDayOfTheYear(Date date) {
+		SimpleDateFormat dateFormatter = new SimpleDateFormat("DD");
+		return Integer.parseInt(dateFormatter.format(date));
 	}
 
 }
