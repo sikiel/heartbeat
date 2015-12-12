@@ -40,8 +40,8 @@ public class HeartbeatFlow {
 			resultCollector.addResults(jenkinsService.getTasksResult());
 			resultCollector.addResults(gridService.getTasksResult());
 
-			csvReportCreator.updateReportWith(resultCollector.getTasksResult());
 			manager.checkReports(csvReportCreator.getReportFile());
+			csvReportCreator.updateReportWith(resultCollector.getTasksResult());
 
 			delayNextCheck(hp);
 		}
