@@ -9,8 +9,8 @@ import java.util.List;
 
 public class ReportFile extends FileZZZ {
 
-	private static final String HEADER = "DATE;JENKINS | GRID;STATUS";
-	private static final String NEW_LINE = System.getProperty("line.separator");
+	static final String HEADER = "DATE;JENKINS | GRID;STATUS";
+	static final String NEW_LINE = System.getProperty("line.separator");
 	private File file;
 
 	public ReportFile(String pathWithCsvFile) {

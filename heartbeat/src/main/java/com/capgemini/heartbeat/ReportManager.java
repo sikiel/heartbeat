@@ -1,6 +1,7 @@
 package com.capgemini.heartbeat;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
@@ -45,6 +46,11 @@ public class ReportManager {
 						fcSource.transferTo(0, fcSource.size(), fcTarget.position(0));
 						target.setReadOnly();
 						fcSource.truncate(0L);
+						FileWriter fileWriter = new FileWriter(file);
+						fileWriter.append(ReportFile.HEADER);
+						fileWriter.append(ReportFile.NEW_LINE);
+						fileWriter.flush();
+						fileWriter.close();
 						fcSource.close();
 						fcTarget.close();
 						rafSource.close();
