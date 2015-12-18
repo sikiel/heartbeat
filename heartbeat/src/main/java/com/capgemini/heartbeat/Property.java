@@ -9,13 +9,7 @@ public class Property {
 	}
 
 	public void setUrl(String url) {
-		if (!url.equals(JsonFileConverter.DEFAULT_PROPERTY_VALUE) && !url.contains("http://")) {
-			HeartbeatFlow.log.warn("incorrect url: " + url + " Adding http://");
-			this.url = "http://" + url;
-		} else {
-			this.url = url;
-		}
-
+		this.url = url;
 	}
 
 }
